@@ -56,14 +56,17 @@ GRID_SIZE = 25
 constants.GRID_SIZE = GRID_SIZE
 TARGET = targets(GRID_SIZE)['square']
 
-# txs = ['bi-loss', 'tri-loss', 1,5,10,17,25,32,40,45]
-txs = ['bi-loss', 'tri-loss', 45, 1]
-tx_dirs = {'bi-loss':'2023_01_03/k25', 'tri-loss':'2023_01_03/k25', 1:'2023_01_05/k1', 5:'2023_01_04/k5', 10:'2023_01_03/k10', 17:'2023_01_05/k17', 25:'2023_01_03/k25', 32:'2023_01_05/k32', 40:'2023_01_03/k40', 45:'2023_01_05/k45'}
-tx_color_dict = {'bi-loss':'tab:blue', 'tri-loss':'tab:orange', 45:'tab:cyan', 1:'tab:red'}
+txs = ['error', 'error_MI_k1']
+tx_dirs = {'bi-loss':'data/exp1/error', 'k=1':'data/exp1/error_MI_k1'}
+labels = ['bi-loss','tri-loss-empowerment (k=1)']
+tx_color_dict = {'error':'tab:blue','error_MI_k1':'tab:green'}
+
+outpath = 'results/exp1'
+
 fig, ax = plt.subplots(1,1, figsize=(10,7))
 labels = []
 handles = []
-pos={'bi-loss':.01, 'tri-loss':-.01, 45:0, 1:0}
+pos={'bi-loss':.01, 'tri-loss':-.01, 45:0, 1:0} # position of annotation for each line of fit
 
 all_slopes = []
 all_losses_dict = {}
@@ -71,12 +74,7 @@ all_losses_dict = {}
 for i,tx in enumerate(txs):
 
     # Load in the appropriate runs
-    if tx=='bi-loss':
-        inpath = 'data/'+tx_dirs[tx]+'/error/'
-    elif tx=='tri-loss':
-        inpath = 'data/'+tx_dirs[tx]+'/error_phase1_error_phase2/'
-    else:
-        inpath = 'data/'+tx_dirs[tx]+'/error_MI/'
+    inpath = tx_dirs[tx]+'/'
 
     all_fits, slopes = extract_all_losses_at_t(inpath)
 
@@ -113,48 +111,5 @@ ax.legend(handles=handles, labels=labels, fontsize=20)
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 
-plt.savefig('gecco23_figs/extended_sim_stability.png', bbox_inches='tight', dpi=500)
-
-# # Plot slope bar chart
-# fig, ax = plt.subplots(1,1, figsize=(10,7))
-# h = 0.005
-# for i in range(len(all_slopes)):
-#     if 'k=' in labels[i]:
-#         color='dimgray'
-#     else:
-#         color='silver'
-
-#     avg_slope = np.mean(all_slopes[i])
-#     ci95 = 1.96 * (np.std(all_slopes[i])/np.sqrt(len(all_slopes[i])))  
-
-#     # Compute significance compared to controls 
-#     t, bi_loss_p = ttest_ind(all_slopes[0], all_slopes[i])
-#     t, tri_loss_p = ttest_ind(all_slopes[1], all_slopes[i])
-
-#     print(bi_loss_p, tri_loss_p)
-    
-#     ax.bar(i, avg_slope, yerr=ci95, color=color, capsize=5)
-    
-#     max_value = avg_slope+ci95
-
-#     alpha = 0.05/(len(txs[2:])*2)
-#     print(alpha)
-#     # annotate plot with significance
-#     bi_loss_sig = bi_loss_p<alpha
-#     tri_loss_sig = tri_loss_p<alpha
-#     if bi_loss_sig and tri_loss_sig:
-#         print('here1')
-#         ax.text(i-0.075, max_value+h, '†', ha='center', va='bottom', color='k')
-#         ax.text(i+0.075, max_value+h, '‡', ha='center', va='bottom', color='k')
-#     elif bi_loss_sig:
-#         print('here2')
-#         ax.text(i, max_value+h, '†', ha='center', va='bottom', color='k')
-#     elif tri_loss_sig:
-#         print('here3')
-#         ax.text(i, max_value+h, '‡', ha='center', va='bottom', color='k')
-
-# ax.set_xticks(np.arange(len(all_slopes)))
-# ax.set_xticklabels(labels)
-# ax.set_ylabel('Slope')
-# plt.savefig('results/robustness/stability_slopes_100iter_all.png')
+plt.savefig('{}/extended_sim_stability.png'.format(outpath), bbox_inches='tight', dpi=500)
 

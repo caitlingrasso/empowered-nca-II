@@ -44,10 +44,9 @@ def compute_95_ci(xs,ys):
 fig, ax = plt.subplots(1,1)
 
 K=[1,5,10,17,25,32,40,45]
-file_paths = {1:'2023_01_05/k1', 5:'2023_01_04/k5', 10:'2023_01_03/k10', 17:'2023_01_05/k17', 25:'2023_01_03/k25', 32:'2023_01_05/k32', 40:'2023_01_03/k40', 45:'2023_01_05/k45'}
 
 # Load in and compute the loss of the controls 
-ctrl_dir = 'data/2023_01_03/k25'
+ctrl_dir = 'data/exp1'
 
 bi_loss_xy_dict = extract_mean_of_best_from_trials(ctrl_dir+'/error/')
 xs, ys = list(zip(*list(bi_loss_xy_dict.values())))
@@ -67,7 +66,7 @@ handles = [bi_loss_handle, ci95_handle, tri_loss_handle]
 for i,k in enumerate(K):
 
     # Load in the appropriate runs
-    inpath = 'data/'+file_paths[k]+'/error_MI/'
+    inpath = 'data/exp1/error_MI_k{}'.format(k)
 
     xy_dict = extract_mean_of_best_from_trials(inpath)
     xs, ys = list(zip(*list(xy_dict.values())))
@@ -92,7 +91,7 @@ ax.legend(handles,labels)
 ax.set_ylabel('Loss')
 ax.set_xlabel('Empowerment')
 
-plt.savefig('results/summary/historyLengthSweep_loss_empowerment_space.png', dpi=300, bbox_inches='tight')
+plt.savefig('results/exp1/historyLengthSweep_loss_empowerment_space.png', dpi=300, bbox_inches='tight')
 plt.close()
 
 

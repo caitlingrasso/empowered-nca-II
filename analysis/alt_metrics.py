@@ -79,11 +79,11 @@ def perimeter(history):
 constants.GRID_SIZE = 25
 TARGET = targets(25)['square']
 ITERATIONS = 50
-metric = p_boundary_cells
+metric = p_boundary_cells # function name
 
-txs = ['bi-loss', 'tri-loss', 'k=1', 'k=45']
-tx_filepath_dict = {'bi-loss':'data/2023_01_03/k25/error', 'tri-loss':'data/2023_01_03/k25/error_phase1_error_phase2', 'k=1':'data/2023_01_05/k1/error_MI', 'k=45':'data/2023_01_05/k45/error_MI'}
-# out_path = 'results/summary/'
+txs = ['bi-loss', 'k=1']
+tx_filepath_dict = {'bi-loss':'data/exp1/error', 'k=1':'data/exp1/error_MI_k1'}
+out_path = 'results/exp1'
 
 metric_dict = {final_state_error:'Loss of final state', perimeter:'Perimeter Nomalized', connected_components:'Num Connected Components', p_boundary_cells:'Proportion cells on boundary', transiency:'Cell State Transiency'}
 tx_color_dict = {'bi-loss':'silver', 'tri-loss':'silver', 'k=1':'dimgray', 'k=45':'dimgray'}
@@ -115,5 +115,5 @@ plt.xticks(np.arange(1,len(txs)+1), labels=txs)
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 plt.ylabel(metric_dict[metric], fontsize=20)
-plt.savefig('gecco23_figs/{}.png'.format(metric.__name__), dpi=500, bbox_inches='tight')
+plt.savefig('{}/{}.png'.format(out_path, metric.__name__), dpi=500, bbox_inches='tight')
 

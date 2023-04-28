@@ -58,8 +58,7 @@ def annot_stat(star, x1, x2, y, h, col='k', ax=None):
 # TARGET = targets()['square']
 
 # High Res
-K=[1,45,90]
-file_paths = {1:'2023_01_30/square50/error_MI_k1', 45:'2023_01_30/square50/error_MI_k45', 90:'2023_01_31/square50_k90/error_MI'}
+K=[1]
 alpha = 0.05 # significance level
 
 ITERATIONS = 100
@@ -67,7 +66,7 @@ constants.GRID_SIZE=50
 TARGET = targets(grid_size=50)['square']
 
 # Load in and compute the loss of the controls 
-ctrl_dir = 'data/2023_01_30/square50'
+ctrl_dir = 'data/exp1'
 
 bi_ctrl_loss_dict = extract_mean_of_best_from_trials(ctrl_dir+'/error/')
 tri_ctrl_loss_dict = extract_mean_of_best_from_trials(ctrl_dir+'/error_phase1_error_phase2/')
@@ -102,17 +101,12 @@ h = 0.005
 for i,k in enumerate(K):
 
     # Load in the appropriate runs
-    # inpath = 'data/'+file_paths[k]+'/error_MI/'
-    inpath = 'data/'+file_paths[k] +'/' # high res
+    inpath = 'data/exp1/error_MI_k{}'.format(k)
 
     loss_dict = extract_mean_of_best_from_trials(inpath)
     values = list(loss_dict.values())
 
-    # # Compute significance compared to controls - ttest
-    # t, bi_loss_p = ttest_ind(bi_loss_values, values)
-    # t, tri_loss_p = ttest_ind(tri_loss_values, values)
-
-    # Compute significance compared to controls - ttest
+    # Compute significance compared to controls - Wilcoxon Rank Sum Test
     t, bi_loss_p = ranksums(bi_loss_values, values)
     t, tri_loss_p = ranksums(tri_loss_values, values)
 
@@ -128,16 +122,8 @@ for i,k in enumerate(K):
         ax.text(index-0.075, max_value+h, '†', ha='center', va='bottom', color='k', fontsize=60)
         ax.text(index+0.075, max_value+h, '‡', ha='center', va='bottom', color='k', fontsize=60)
     elif bi_loss_sig:
-        # global_max_value = np.max([max_value, global_max_value, bi_loss_max_value])
-        # annot_stat(x1=1, x2=index, h = h, y = global_max_value+0.01, star='*')
-        # max_point = global_max_value+0.01+h
-        # global_max_value = np.max([global_max_value, max_point])
         ax.text(index, max_value+h, '†', ha='center', va='bottom', color='k', fontsize=60)
     elif tri_loss_sig:
-        # global_max_value = np.max([max_value, global_max_value, tri_loss_max_value])
-        # annot_stat(x1=2, x2=index, h = h, y = global_max_value+0.01, star='*')
-        # max_point = global_max_value+0.01+h
-        # global_max_value = np.max([global_max_value, max_point])
         ax.text(index, max_value+h, '‡', ha='center', va='bottom', color='k', fontsize=60)
 
     labels.append('k={}'.format(k))
@@ -152,7 +138,7 @@ ax.set_ylabel('Loss', fontsize=60)
 plt.yticks(fontsize=60)
 
 # plt.show()
-plt.savefig('gecco23_figs/ksweep_ranksums_highres.png', dpi=500, bbox_inches='tight')
+plt.savefig('results/exp1/ksweep_ranksums_highres.png', dpi=500, bbox_inches='tight')
 plt.close()
 
 

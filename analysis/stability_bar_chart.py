@@ -48,10 +48,10 @@ GRID_SIZE = 25
 constants.GRID_SIZE = GRID_SIZE
 TARGET = targets(GRID_SIZE)['square']
 
-# txs = ['bi-loss', 'tri-loss', 1,5,10,17,25,32,40,45]
-txs = ['bi-loss', 'tri-loss', 'k=1', 'k=45']
-tx_dirs = {'bi-loss':'2023_01_03/k25', 'tri-loss':'2023_01_03/k25', 'k=1':'2023_01_05/k1', 5:'2023_01_04/k5', 10:'2023_01_03/k10', 17:'2023_01_05/k17', 25:'2023_01_03/k25', 32:'2023_01_05/k32', 40:'2023_01_03/k40', 'k=45':'2023_01_05/k45'}
-tx_color_dict = {'bi-loss':'silver', 'tri-loss':'silver', 'k=1':'dimgray', 'k=45':'dimgray'}
+txs = ['error', 'error_MI_k1']
+tx_dirs = {'bi-loss':'data/exp1/error', 'k=1':'data/exp1/error_MI_k1'}
+labels = ['bi-loss','tri-loss-empowerment (k=1)']
+tx_color_dict = {'error':'tab:blue','error_MI_k1':'tab:green'}
 
 # fig, ax = plt.subplots(1,1, figsize=(10,7))
 labels = []
@@ -63,12 +63,7 @@ all_losses_dict = {}
 for i,tx in enumerate(txs):
 
     # Load in the appropriate runs
-    if tx=='bi-loss':
-        inpath = 'data/'+tx_dirs[tx]+'/error/'
-    elif tx=='tri-loss':
-        inpath = 'data/'+tx_dirs[tx]+'/error_phase1_error_phase2/'
-    else:
-        inpath = 'data/'+tx_dirs[tx]+'/error_MI/'
+    inpath = tx_dirs[tx]+'/'
 
     losses = extract_all_losses_at_t(inpath)
 
@@ -83,4 +78,4 @@ plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 # plt.title('Stability after {} test iterations'.format(EXTENDED_ITERATIONS))
 
-plt.savefig('gecco23_figs/stability_bar_chart_{}test_iter.png'.format(EXTENDED_ITERATIONS), dpi=500, bbox_inches='tight')
+plt.savefig('results/exp1/stability_bar_chart_{}test_iter.png'.format(EXTENDED_ITERATIONS), dpi=500, bbox_inches='tight')
