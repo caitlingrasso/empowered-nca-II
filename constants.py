@@ -7,7 +7,7 @@ POP_SIZE = 400
 GENERATIONS = 2000
 SAVE_ALL = False
 objectives = ['error', 'error_phase1', 'error_phase2', 'MI']
-use_new_eval_method = True
+# use_new_eval_method = False
 
 # NCA parameters - constant
 N_CHANNELS = 2
@@ -16,8 +16,8 @@ N_HIDDEN_LAYERS = 0
 NEIGHBORHOOD = 4 # Von Neumann (4) vs. Moore (8)
 CONTINUOUS_SIGNALING = False 
 MEMORY = False
-SIGNAL_NOISE = False
-SIGNAL_NOISE_STD = 0.1
+SIGNAL_NOISE = True
+SIGNAL_NOISE_STD = 0.3
 
 # Info metric parameters
 HISTORY_LENGTH = 1
