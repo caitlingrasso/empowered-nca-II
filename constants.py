@@ -4,10 +4,9 @@ GRID_SIZE = 25
 
 # Evolution parameters
 POP_SIZE = 400
-GENERATIONS = 2000
+GENERATIONS = 1000
 SAVE_ALL = False
 objectives = ['error', 'error_phase1', 'error_phase2', 'MI']
-# use_new_eval_method = False
 
 # NCA parameters - constant
 N_CHANNELS = 2
