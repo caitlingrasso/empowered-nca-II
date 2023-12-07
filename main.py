@@ -80,13 +80,13 @@ if __name__=="__main__":
     # Filenames
     prefix = '{}_{}{}{}_{}gens_{}ps_{}i_k{}_N{}_{}_run{}'.format(args.objective1, obj2, target_str,constants.GRID_SIZE, args.gens, args.popsize, \
         constants.ITERATIONS, constants.HISTORY_LENGTH, constants.NEIGHBORHOOD, SA, args.run)
-    save_filename = 'data/{}/{}/{}.p'.format(args.save_dir, label, prefix)
+    save_filename = 'data/{}.p'.format(prefix)
     save_all_dir = 'arwp/{}'.format(prefix)
     checkpoint_dir = 'checkpoints/{}'.format(prefix)
 
     # make directories for data
-    os.makedirs('data/{}/{}/'.format(args.save_dir, label), exist_ok=True)
-    # os.makedirs('arwp/', exist_ok=True)
+    os.makedirs('data/', exist_ok=True)
+    os.makedirs('arwp/', exist_ok=True)
     os.makedirs('checkpoints/', exist_ok=True)
 
     # START RUN
@@ -99,7 +99,7 @@ if __name__=="__main__":
     # For tri-objective:
     # stats = [fits_per_gen, empowerment_per_gen, obj1_score_per_gen, obj2_score_per_gen, pareto_front, pf_sizes_per_gen]
     
-    # Save data from run 
+     # Save data from run 
     f = open(save_filename, 'wb')
     pickle.dump([best,stats], f)
     f.close()

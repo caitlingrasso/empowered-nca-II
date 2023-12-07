@@ -317,3 +317,4 @@ class Optimizer:
         f = open(filename, 'wb')
         pickle.dump([self, rng_state, np_rng_state], f)
         f.close()
+
