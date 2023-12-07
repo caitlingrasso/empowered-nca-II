@@ -114,7 +114,7 @@ class CA_MODEL:
             self.grids = self.grids.astype(int)
 
     def update(self):
-        neigh = self.get_neighbors(self.grids[:,:,0])
+        # neigh = self.get_neighbors(self.grids[:,:,0])
 
         ins = np.concatenate((self.get_neighbors(self.grids[:,:,0]),
                                  np.reshape(self.grids[:,:,0], (self.grids.shape[0], self.grids.shape[1], 1))), axis=2)
@@ -217,13 +217,18 @@ class CA_MODEL:
         for l in range(len(self.model)):
             x = np.dot(x,self.model[l])
             x = self.activations[l](x)
-
+        # print(np.round(x,2))
         cell_signal_index = constants.NEIGHBORHOOD+1
         if not constants.CONTINUOUS_SIGNALING:
             x[:,cell_signal_index] = self.rescale(x[:,cell_signal_index]).astype(int)
 
         # Convert the first 5 inputs to binary (cell states)
-        x[:,0:cell_signal_index] = x[:,0:cell_signal_index] > 0
+        if constants.SIGNALING_ARTIFACT:
+            x[:,0:cell_signal_index] = x[:,0:cell_signal_index] > 0
+        else:
+            x[:,0:cell_signal_index] = x[:,0:cell_signal_index] > 0.5 # was 0
+        # print(np.round(x,2))
+        # print()
         return x
 
     def get_neighbors(self, a, neighborhood=constants.NEIGHBORHOOD):
@@ -242,7 +247,12 @@ class CA_MODEL:
     # def tanh(self, x):
     #     return np.tanh(x)
 
-    def rescale(self, x, xmin=-1, xmax=1, a=0, b=255):
+    def rescale(self, x, xmin=0, xmax=1, a=0, b=255):
+        if constants.SIGNALING_ARTIFACT:
+            xmin = -1 # signally artifact that arose from mistakenly assuming sigmoid output was in the range (-1,1)
+        else:
+            xmin=0 # sigmoid activation function ranges from (0-1)
+        xmax = 1
         xprime = a+((x-xmin)*(b-a))/(xmax-xmin)
         return xprime
 

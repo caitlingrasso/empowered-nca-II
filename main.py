@@ -63,6 +63,11 @@ if __name__=="__main__":
     target_str = args.target
     targ=targets()[target_str]
 
+    if constants.SIGNALING_ARTIFACT:
+        SA = 'SA'
+    else:
+        SA = 'SA_removed'
+
     # # Plotting initial and target grid conditions
     
     # signal = np.zeros(targ.shape)
@@ -73,8 +78,8 @@ if __name__=="__main__":
     # exit()
 
     # Filenames
-    prefix = '{}_{}{}{}_{}gens_{}ps_{}i_k{}_N{}_run{}'.format(args.objective1, obj2, target_str,constants.GRID_SIZE, args.gens, args.popsize, \
-        constants.ITERATIONS, constants.HISTORY_LENGTH, constants.NEIGHBORHOOD, args.run)
+    prefix = '{}_{}{}{}_{}gens_{}ps_{}i_k{}_N{}_{}_run{}'.format(args.objective1, obj2, target_str,constants.GRID_SIZE, args.gens, args.popsize, \
+        constants.ITERATIONS, constants.HISTORY_LENGTH, constants.NEIGHBORHOOD, SA, args.run)
     save_filename = 'data/{}/{}/{}.p'.format(args.save_dir, label, prefix)
     save_all_dir = 'arwp/{}'.format(prefix)
     checkpoint_dir = 'checkpoints/{}'.format(prefix)

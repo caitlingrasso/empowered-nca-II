@@ -86,24 +86,14 @@ class Genome:
         # for action in actions[(constants.ITERATIONS-constants.HISTORY_LENGTH)-constants.SEQUENCE_LENGTH:-constants.HISTORY_LENGTH]: # cropping for equal number of samples based on constants.SEQUENCE_LENGTH
             action = action[1:-1, 1:-1,:] # remove padding
             at = action[:,:,-1].flatten() # last value in action list (new output signal value of cell)
-            for i in range(len(at)):
-                try:
-                    A[i].append(at[i])
-                except:
-                    A.append([])
-                    A[i].append(at[i])
+            A.append(list(at))
         
         # Collect sensor (output) states for second half of timesteps
         for sensor in sensors[constants.HISTORY_LENGTH:]: # original
         # for sensor in sensors[constants.ITERATIONS-constants.SEQUENCE_LENGTH:]: # cropping for equal number of samples based on constants.SEQUENCE_LENGTH
             sensor = sensor[1:-1, 1:-1,:] # remove padding
             st = np.mean(sensor[:,:,constants.NEIGHBORHOOD+1:],axis=2).flatten() # Average last 4 signal values (input signal values of neighbors + self) - these are floats because they are averages
-            for i in range(len(st)):
-                try:
-                    S[i].append(st[i])
-                except:
-                    S.append([])
-                    S[i].append(st[i])
+            S.append(list(st))
 
         # print(len(A[i]))
         # print(len(S[i]))
