@@ -31,7 +31,10 @@ def extract_mean_of_best_from_trials(inpath,target,additional_obj):
 
         best.evaluate(['error', additional_obj], target, 0)
 
-        best_fits_dict[run] = (best.get_objective(additional_obj), best.get_objective('error'))
+        if additional_obj=='MI':
+            best_fits_dict[run] = (best.get_objective(additional_obj)*-1, best.get_objective('error')) # undo minimization
+        else:
+            best_fits_dict[run] = (best.get_objective(additional_obj), best.get_objective('error'))
 
     return best_fits_dict
 
@@ -45,10 +48,14 @@ def compute_95_ci(xs,ys):
     return meanx, ci95x, meany, ci95y
 
 fig, ax = plt.subplots(1,1)
-additional_obj = 'min_global_action_entropy' # MI, min_action_entropy, min_global_action_entropy
+additional_obj = 'MI' # MI, min_action_entropy, min_global_action_entropy
+
+plt.rcParams['xtick.labelsize']=15
+plt.rcParams['ytick.labelsize']=15
 
 # K=[1,5,10,17,25,32,40,45]
-K=[1,45]
+K=[1]
+colors = ['tab:red', 'tab:green']
 constants.HISTORY_LENGTH = 1
 target = targets()['square']
 
@@ -57,13 +64,13 @@ ctrl_dir = 'data/exp1_ksweep'
 
 bi_loss_xy_dict = extract_mean_of_best_from_trials(ctrl_dir+'/error/', target, additional_obj)
 xs, ys = list(zip(*list(bi_loss_xy_dict.values())))
-bi_loss_handle = ax.scatter(xs,ys,alpha=.7,edgecolors='none')
+bi_loss_handle = ax.scatter(xs,ys,alpha=.7,color='tab:blue',edgecolors='none')
 meanx, ci95x, meany, ci95y = compute_95_ci(xs,ys)
 ci95_handle = ax.errorbar(meanx, meany, xerr=ci95x, yerr=ci95y,fmt="o", capsize=3, c=bi_loss_handle.get_facecolor(), alpha=1)
 
 tri_loss_xy_dict = extract_mean_of_best_from_trials(ctrl_dir+'/error_phase1_error_phase2/', target, additional_obj)
 xs, ys = list(zip(*list(tri_loss_xy_dict.values())))
-tri_loss_handle = ax.scatter(xs,ys,alpha=.7,edgecolors='none')
+tri_loss_handle = ax.scatter(xs,ys,alpha=.7,color='tab:orange', edgecolors='none')
 meanx, ci95x, meany, ci95y = compute_95_ci(xs,ys)
 ax.errorbar(meanx, meany, xerr=ci95x, yerr=ci95y,fmt="o", capsize=3, c=tri_loss_handle.get_facecolor(), alpha=1)
 
@@ -77,28 +84,30 @@ for i,k in enumerate(K):
 
     xy_dict = extract_mean_of_best_from_trials(inpath, target, additional_obj)
     xs, ys = list(zip(*list(xy_dict.values())))
-    handle = ax.scatter(xs,ys,alpha=.7,edgecolors='none')
+    handle = ax.scatter(xs,ys,alpha=.7,color=colors[i],edgecolors='none')
     meanx, ci95x, meany, ci95y = compute_95_ci(xs,ys)
     ax.errorbar(meanx, meany, xerr=ci95x, yerr=ci95y,fmt="o", capsize=3, c=handle.get_facecolor(), alpha=1)
 
-    labels.append('tri-loss-emp, k={}'.format(k))
+    labels.append('loss + k={}'.format(k))
     handles.append(handle)
 
+# Adding min. action entropy to the plot
 MAE = extract_mean_of_best_from_trials('data/exp5_addcontrols_square/min_action_entropy', target, additional_obj)
 xs, ys = list(zip(*list(MAE.values())))
-MAE_handle = ax.scatter(xs,ys,alpha=.7,edgecolors='none')
+MAE_handle = ax.scatter(xs,ys,alpha=.7,color='tab:green',edgecolors='none')
 meanx, ci95x, meany, ci95y = compute_95_ci(xs,ys)
 ax.errorbar(meanx, meany, xerr=ci95x, yerr=ci95y,fmt="o", capsize=3, c=MAE_handle.get_facecolor(), alpha=1)
 
 handles.append(MAE_handle)
-labels.append('MAE')
+labels.append('loss + min. action entropy')
 
-ax.legend(handles,labels)
-ax.set_ylabel('Loss')
-ax.set_xlabel('Global action entropy')
+ax.legend(handles,labels, fontsize=15, ncol=2)
+ax.set_ylabel('Loss', fontsize=20)
+if additional_obj=='MI':
+    ax.set_xlabel('Empowerment (k={})'.format(constants.HISTORY_LENGTH),fontsize=20)
 # plt.show()
 
-plt.savefig('results/loss_MAE_global.png', dpi=300, bbox_inches='tight')
+plt.savefig('results/exp5_additional_controls/loss_emp_scatter_k{}_MAE.png'.format(constants.HISTORY_LENGTH), dpi=300, bbox_inches='tight')
 plt.close()
 
 

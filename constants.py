@@ -17,7 +17,7 @@ CONTINUOUS_SIGNALING = False
 MEMORY = False
 SIGNAL_NOISE = False
 SIGNAL_NOISE_STD = 0.3
-SIGNALING_ARTIFACT = False # default = True
+SIGNALING_ARTIFACT = True # default = True
 
 # Info metric parameters
 HISTORY_LENGTH = 1

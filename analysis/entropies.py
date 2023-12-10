@@ -58,10 +58,10 @@ TARGET = targets(GRID_SIZE)['square']
 ITERATIONS = 50
 
 data_dict = {
-    0: {'dir':'data/exp1_ksweep/error', 'color':'blue', 'label': 'BL'},
-    1: {'dir':'data/exp1_ksweep/error_phase1_error_phase2', 'color':'orange', 'label': 'TL'},
-    2: {'dir':'data/exp1_ksweep/k1/error_MI', 'color':'red', 'label': 'TLE-k=1'},
-    3: {'dir':'data/exp1_ksweep/k45/error_MI', 'color':'cyan', 'label': 'TLE-k45'},
+    0: {'dir':'data/exp1_ksweep/error', 'color':'blue', 'label': 'bi-loss'},
+    1: {'dir':'data/exp1_ksweep/error_phase1_error_phase2', 'color':'orange', 'label': 'tri-loss'},
+    2: {'dir':'data/exp1_ksweep/k1/error_MI', 'color':'red', 'label': 'k=1'},
+    3: {'dir':'data/exp1_ksweep/k45/error_MI', 'color':'cyan', 'label': 'k=45'},
     4: {'dir':'data/exp5_addcontrols_square/min_action_entropy', 'color':'cyan', 'label': 'MAE'}
 }
 
@@ -134,12 +134,14 @@ for tx in data_dict:
         
 
         # local
-        # cell_entropies = []
+        # H_A = []
+        # H_AS = []
         # for cell in range(action_series_mat.shape[0]): # iterate through rows (i.e. cells)
-        #     # cell_entropies.append(shannon_entropy(sensor_series_mat[cell,:]))
-        #     cell_entropies.append(conditional_shannon_entropy(sensor_series_mat[cell,:], action_series_mat[cell,:]))
+        #     H_A.append(shannon_entropy(sensor_series_mat[cell,:]))
+        #     H_AS.append(conditional_shannon_entropy(sensor_series_mat[cell,:], action_series_mat[cell,:]))
 
-        # entropies.append(np.mean(cell_entropies))
+        # entropies1.append(np.mean(H_A))
+        # entropies2.append(np.mean(H_AS))
 
     all_entropies1.append(entropies1)
     all_entropies2.append(entropies2)
@@ -168,11 +170,11 @@ plt.setp(plot2["boxes"], facecolor = 'indianred')
 plt.setp(plot2["fliers"], markeredgecolor='darkred')
 
 xticks = [x+0.125 for x in x1]
-plt.xticks(xticks, labels, fontweight='bold', fontsize=15)
+plt.xticks(xticks, labels, fontsize=15)
 # plt.ylim([0, h+0.25])
 ax.tick_params(axis='y', which='major', labelsize=12)
 
-plt.ylabel('Entropy (bits)', fontweight='bold', fontsize=10)
+plt.ylabel('Entropy (bits)', fontsize=15)
 
 # Statistical annotations
 for i in [0,1,3,4]:
@@ -206,8 +208,8 @@ handles = [Patch(facecolor='lightgray', edgecolor='dimgray', label='H(A)'),
 ax.legend(handles=handles, handlelength=2, handleheight=1, frameon=False, bbox_to_anchor=(1.05, 1.0), loc='upper left',
             borderaxespad=0, fontsize=13)
 
-plt.title('Global Action Entropy')
+# plt.title('Local Action Entropy')
 
-plt.savefig('results/global_HA_HAS_boxplot.png', dpi=300, bbox_inches='tight')
+plt.savefig('results/exp5_additional_controls/global_HA_HAS_boxplot.png', dpi=300, bbox_inches='tight')
 
 plt.show()

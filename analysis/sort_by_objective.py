@@ -10,9 +10,9 @@ def get_best(DIR, objective):
 def get_worst(DIR, objective):
     return sort_by(DIR, objective, reverse=True)
 
-SAVE_DIR = 'exp1_ksweep'
+SAVE_DIR = 'exp3_upscale/'
 TXS = ['error_phase1_error_phase2']
-TARGET = targets(grid_size=25)['square']
+TARGET = targets(grid_size=50)['square']
 METRIC = "error"
 
 print('METRIC:', METRIC)

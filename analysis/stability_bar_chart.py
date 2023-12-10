@@ -17,7 +17,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from util import sort_by
 import visualizations
 import constants
-from config import targets
 
 def extract_all_losses_at_t(inpath):
     filenames = glob(inpath+'*.p')
@@ -46,12 +45,9 @@ EXTENDED_ITERATIONS = 100 # double the length of the simulation
 TRAIN_ITERATIONS = 50
 GRID_SIZE = 25
 constants.GRID_SIZE = GRID_SIZE
-TARGET = targets(GRID_SIZE)['square']
 
-txs = ['error', 'error_MI_k1']
-tx_dirs = {'bi-loss':'data/exp1/error', 'k=1':'data/exp1/error_MI_k1'}
-labels = ['bi-loss','tri-loss-empowerment (k=1)']
-tx_color_dict = {'error':'tab:blue','error_MI_k1':'tab:green'}
+tx_filepath_dict = {'bi-loss':'data/exp1_ksweep/error', 'tri-loss':'data/exp1_ksweep/error_phase1_error_phase2', 'k=1':'data/exp1_ksweep/k1/error_MI', 'k=45':'data/exp1_ksweep/k45/error_MI'}
+tx_color_dict = {'bi-loss':'silver', 'tri-loss':'silver', 'k=1':'dimgray', 'k=45':'dimgray'}
 
 # fig, ax = plt.subplots(1,1, figsize=(10,7))
 labels = []
@@ -60,10 +56,10 @@ handles = []
 all_slopes = []
 all_losses_dict = {}
 
-for i,tx in enumerate(txs):
+for i,tx in enumerate(tx_filepath_dict):
 
     # Load in the appropriate runs
-    inpath = tx_dirs[tx]+'/'
+    inpath = tx_filepath_dict[tx]+'/'
 
     losses = extract_all_losses_at_t(inpath)
 
@@ -72,10 +68,11 @@ for i,tx in enumerate(txs):
 
     plt.bar(i+1, avg_loss, yerr=ci95, capsize=5, color=tx_color_dict[tx])
 
-plt.xticks(np.arange(1,len(txs)+1), labels=txs)
+plt.xticks(np.arange(1,len(tx_filepath_dict)+1), labels=tx_filepath_dict.keys())
 plt.ylabel('Instability', fontsize=20)
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 # plt.title('Stability after {} test iterations'.format(EXTENDED_ITERATIONS))
 
-plt.savefig('results/exp1/stability_bar_chart_{}test_iter.png'.format(EXTENDED_ITERATIONS), dpi=500, bbox_inches='tight')
+# plt.show()
+plt.savefig('results/stability_bar_chart_{}iter.png'.format(EXTENDED_ITERATIONS), dpi=500, bbox_inches='tight')

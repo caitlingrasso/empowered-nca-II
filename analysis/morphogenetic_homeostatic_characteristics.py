@@ -79,16 +79,15 @@ def perimeter(history):
 constants.GRID_SIZE = 25
 TARGET = targets(25)['square']
 ITERATIONS = 50
-metric = p_boundary_cells # function name
+metric = transiency # function name
 
-txs = ['bi-loss', 'k=1']
-tx_filepath_dict = {'bi-loss':'data/exp1/error', 'k=1':'data/exp1/error_MI_k1'}
-out_path = 'results/exp1'
+tx_filepath_dict = {'bi-loss':'data/exp1_ksweep/error', 'tri-loss':'data/exp1_ksweep/error_phase1_error_phase2', 'k=1':'data/exp1_ksweep/k1/error_MI', 'k=45':'data/exp1_ksweep/k45/error_MI'}
+out_path = 'results'
 
 metric_dict = {final_state_error:'Loss of final state', perimeter:'Perimeter Nomalized', connected_components:'Num Connected Components', p_boundary_cells:'Proportion cells on boundary', transiency:'Cell State Transiency'}
 tx_color_dict = {'bi-loss':'silver', 'tri-loss':'silver', 'k=1':'dimgray', 'k=45':'dimgray'}
 
-for i,tx in enumerate(txs):
+for i,tx in enumerate(tx_filepath_dict):
 
     vals = []
 
@@ -111,9 +110,11 @@ for i,tx in enumerate(txs):
     ci95 = 1.96 * (np.std(vals)/np.sqrt(len(vals)))
     plt.bar(i+1, np.mean(vals), yerr=ci95, color=tx_color_dict[tx], capsize=5)
 
-plt.xticks(np.arange(1,len(txs)+1), labels=txs)
+plt.xticks(np.arange(1,len(tx_filepath_dict)+1), labels=tx_filepath_dict.keys())
 plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 plt.ylabel(metric_dict[metric], fontsize=20)
+
+# plt.show()
 plt.savefig('{}/{}.png'.format(out_path, metric.__name__), dpi=500, bbox_inches='tight')
 

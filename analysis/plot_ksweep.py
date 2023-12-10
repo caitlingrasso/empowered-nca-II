@@ -23,10 +23,16 @@ def extract_mean_of_best_from_trials(inpath):
     
     best_fits_dict = {} # key = run number, value = best individual's loss from that run
     
+    print(inpath)
+    print(len(filenames))
+    print()
+
     for filename in filenames:
 
         run = filename.split('run')[-1].split('.')[0]
-        
+
+        # if int(run) != 17 and int(run) !=29: # for exp3_upscale/error_MI_k1
+    
         try:
             with open(filename, 'rb') as f:
                 best, stats = pickle.load(f)
@@ -43,6 +49,8 @@ def extract_mean_of_best_from_trials(inpath):
         
         # best_fits_dict[run] = best.get_objective('error')
 
+    print(len(best_fits_dict))
+
     return best_fits_dict
 
 def annot_stat(star, x1, x2, y, h, col='k', ax=None):
@@ -50,23 +58,19 @@ def annot_stat(star, x1, x2, y, h, col='k', ax=None):
     ax.plot([x1, x1, x2, x2], [y, y+h, y+h, y], lw=1.5, c=col)
     ax.text((x1+x2)*.5, y+h, star, ha='center', va='bottom', color=col)
 
-# K=[1,5,10,17,25,32,40,45]
-# file_paths = {1:'2023_01_05/k1', 5:'2023_01_04/k5', 10:'2023_01_03/k10', 17:'2023_01_05/k17', 25:'2023_01_03/k25', 32:'2023_01_05/k32', 40:'2023_01_03/k40', 45:'2023_01_05/k45'}
-# alpha = 0.05 # significance level
 
-# ITERATIONS = 50
-# TARGET = targets()['square']
-
-# High Res
-K=[1]
+# Standard
+K=[1,5,10,17,25,32,40,45]
+# High res
+# K=[1,45,90]
 alpha = 0.05 # significance level
 
-ITERATIONS = 100
-constants.GRID_SIZE=50
-TARGET = targets(grid_size=50)['square']
+ITERATIONS = 50
+constants.GRID_SIZE=25
+TARGET = targets(grid_size=25)['square']
 
 # Load in and compute the loss of the controls 
-ctrl_dir = 'data/exp1'
+ctrl_dir = 'data/exp1_ksweep'
 
 bi_ctrl_loss_dict = extract_mean_of_best_from_trials(ctrl_dir+'/error/')
 tri_ctrl_loss_dict = extract_mean_of_best_from_trials(ctrl_dir+'/error_phase1_error_phase2/')
@@ -74,7 +78,8 @@ tri_ctrl_loss_dict = extract_mean_of_best_from_trials(ctrl_dir+'/error_phase1_er
 labels = []
 x_ticks = []
 
-fig, ax = plt.subplots(1,1, figsize=(24,17))
+# fig, ax = plt.subplots(1,1, figsize=(24,17))
+fig, ax = plt.subplots(1,1)
 
 # Compute 95% confidence interval
 bi_loss_values = list(bi_ctrl_loss_dict.values())
@@ -97,14 +102,21 @@ x_ticks.append(2)
 index = 3
 global_max_value = 0.0
 h = 0.005
+fntsz = 25 # was 60
 
+all_values = []
 for i,k in enumerate(K):
 
     # Load in the appropriate runs
-    inpath = 'data/exp1/error_MI_k{}'.format(k)
+    # Standard
+    # inpath = 'data/exp3_upscale/k{}/error_MI/'.format(k)
+
+    # High res
+    inpath = f'data/exp1_ksweep/k{k}/error_MI/'
 
     loss_dict = extract_mean_of_best_from_trials(inpath)
     values = list(loss_dict.values())
+    all_values.append(values)
 
     # Compute significance compared to controls - Wilcoxon Rank Sum Test
     t, bi_loss_p = ranksums(bi_loss_values, values)
@@ -115,30 +127,36 @@ for i,k in enumerate(K):
     std = np.std(values) 
     max_value = np.mean(values)+ci95
     tx_handle = ax.bar(index, np.mean(values), color='dimgray', yerr=ci95, capsize=5)
+    
     # annotate plot with significance
     bi_loss_sig = bi_loss_p<alpha/(len(K)*2)
     tri_loss_sig = tri_loss_p<alpha/(len(K)*2)
     if bi_loss_sig and tri_loss_sig:
-        ax.text(index-0.075, max_value+h, '†', ha='center', va='bottom', color='k', fontsize=60)
-        ax.text(index+0.075, max_value+h, '‡', ha='center', va='bottom', color='k', fontsize=60)
+        ax.text(index-0.075, max_value+h, '†', ha='center', va='bottom', color='k', fontsize=fntsz)
+        ax.text(index+0.075, max_value+h, '‡', ha='center', va='bottom', color='k', fontsize=fntsz)
     elif bi_loss_sig:
-        ax.text(index, max_value+h, '†', ha='center', va='bottom', color='k', fontsize=60)
+        ax.text(index, max_value+h, '†', ha='center', va='bottom', color='k', fontsize=fntsz)
     elif tri_loss_sig:
-        ax.text(index, max_value+h, '‡', ha='center', va='bottom', color='k', fontsize=60)
+        ax.text(index, max_value+h, '‡', ha='center', va='bottom', color='k', fontsize=fntsz)
 
     labels.append('k={}'.format(k))
     x_ticks.append(index)
     index+=1
 
-# ax.legend(handles=[ctrl_handle, tx_handle], labels=['loss-only', 'loss+empowerment'], fontsize=30)
-matplotlib.rcParams.update({'font.size': 60})
+# test significance for the shortest and longest time horizons
+t, p = ranksums(all_values[0], all_values[-1])
+print(p)
+
+ax.legend(handles=[ctrl_handle, tx_handle], labels=['loss-only', 'loss+empowerment'], fontsize=15, bbox_to_anchor=(1.05, 1.0), loc='upper left',
+            borderaxespad=0)
+matplotlib.rcParams.update({'font.size': 10})
 ax.set_xticks(x_ticks)
-ax.set_xticklabels(labels, fontsize=60)
-ax.set_ylabel('Loss', fontsize=60)
-plt.yticks(fontsize=60)
+ax.set_xticklabels(labels, fontsize=10)
+ax.set_ylabel('Loss', fontsize=15)
+plt.yticks(fontsize=10)
 
 # plt.show()
-plt.savefig('results/exp1/ksweep_ranksums_highres.png', dpi=500, bbox_inches='tight')
-plt.close()
+plt.savefig('results/exp1_ksweep/ksweep_ranksums_highres.png', dpi=500, bbox_inches='tight')
+# plt.close()
 
 
