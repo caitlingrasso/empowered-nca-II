@@ -24,7 +24,7 @@ GRID_SIZE = 25
 constants.GRID_SIZE = GRID_SIZE
 TARGET = targets(GRID_SIZE)['square']
 constants.SIGNAL_NOISE = True
-constants.SIGNAL_NOISE_STD = 1
+constants.SIGNAL_NOISE_STD = 0.1
 REPS = 10
 
 # Square
@@ -83,8 +83,8 @@ for line in data_dict:
 
 plt.title(r'Gaussian noise, $\sigma={}$'.format(constants.SIGNAL_NOISE_STD), fontsize=15)
 # plt.title('No noise')
-# plt.legend(handles,labels,fontsize=15)
-plt.xlabel('Iterations', fontsize=20)
+plt.legend(handles,labels,fontsize=17)
+plt.xlabel('Simulation Time', fontsize=20)
 plt.ylabel('Loss', fontsize=20)
 # plt.show()
 plt.savefig(f'results/exp5_additional_controls/noisy_signaling_{constants.SIGNAL_NOISE_STD}std.png', dpi=300, bbox_inches='tight')

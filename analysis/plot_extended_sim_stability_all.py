@@ -85,7 +85,7 @@ for lbl in tx_dirs:
     line, = plt.semilogy(x,avg_fits, color=tx_color_dict[lbl])
     plt.fill_between(x, (avg_fits-ci95), (avg_fits+ci95), color=tx_color_dict[lbl], alpha=.25)
     if 'error_MI' in inpath:
-        labels.append('k={}'.format(lbl))
+        labels.append('{}'.format(lbl))
     else:
         labels.append(lbl)
     handles.append(line)
@@ -103,7 +103,7 @@ for lbl in tx_dirs:
     plt.plot(x, avg_fits, x_fit, p(x_fit),color=tx_color_dict[lbl],linestyle='--')
     plt.annotate(f'm={coeffs[0]: .4f}', (101, p(x_fit)[-1]+pos[lbl]), color=tx_color_dict[lbl],fontsize=20, backgroundcolor='white')
 
-ax.set_xlabel('Iterations', fontsize=25)
+ax.set_xlabel('Simulation Time', fontsize=25)
 ax.set_ylabel('Loss',fontsize=25)
 train_handle = plt.axvspan(0,50, color='lightgray',alpha=0.7)
 handles.append(train_handle)
@@ -113,5 +113,5 @@ ax.legend(handles=handles, labels=labels, fontsize=20, loc=(.2,.6))
 
 # plt.show()
 
-plt.savefig('results/extended_sim_stability.png'.format(outpath), bbox_inches='tight', dpi=500)
+plt.savefig('results/exp1_ksweep/extended_sim_stability.png'.format(outpath), bbox_inches='tight', dpi=500)
 
