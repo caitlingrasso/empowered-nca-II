@@ -4,10 +4,6 @@ This repository contains source code for the GECCO'23 (Genetic and Evolutionary 
 
 [Caitlin Grasso and Josh Bongard (2023). *Selection for short-term empowerment accelerates the evolution of homeostatic neural cellular automata.*](https://arxiv.org/abs/2305.15220)</br> 
 
-<p align="center">
-  <img src="https://github.com/caitlingrasso/empowered-nca-II/blob/master/methods_fig.png?raw=true"  width="600" height="550">
-</p>
-
 ## Structure
 
 - `main.py` - launches an evolutionary algorithm that performs bi- or tri-objective search of NCA capable of morphogenesis. Specify the parameters of the EA as command line input. For example:
