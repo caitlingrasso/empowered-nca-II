@@ -68,6 +68,12 @@ if __name__=="__main__":
     else:
         SA = 'SA_removed'
 
+    if constants.DIFFUSE:
+        diffuse = 'diffusion'
+    else:
+        diffuse = 'no_diffusion'
+
+
     # # Plotting initial and target grid conditions
     
     # signal = np.zeros(targ.shape)
@@ -78,8 +84,8 @@ if __name__=="__main__":
     # exit()
 
     # Filenames
-    prefix = '{}_{}{}{}_{}gens_{}ps_{}i_k{}_N{}_{}_run{}'.format(args.objective1, obj2, target_str,constants.GRID_SIZE, args.gens, args.popsize, \
-        constants.ITERATIONS, constants.HISTORY_LENGTH, constants.NEIGHBORHOOD, SA, args.run)
+    prefix = '{}_{}{}{}_{}gens_{}ps_{}i_k{}_N{}_{}_{}_run{}'.format(args.objective1, obj2, target_str,constants.GRID_SIZE, args.gens, args.popsize, \
+        constants.ITERATIONS, constants.HISTORY_LENGTH, constants.NEIGHBORHOOD, SA, diffuse, args.run)
     save_filename = 'data/{}.p'.format(prefix)
     save_all_dir = 'arwp/{}'.format(prefix)
     checkpoint_dir = 'checkpoints/{}'.format(prefix)

@@ -17,14 +17,14 @@ CONTINUOUS_SIGNALING = False
 MEMORY = False
 SIGNAL_NOISE = False
 SIGNAL_NOISE_STD = 0.3
-SIGNALING_ARTIFACT = True # default = True
+SIGNALING_ARTIFACT = False # default = True
 
 # Info metric parameters
 HISTORY_LENGTH = 1
 SEQUENCE_LENGTH = ITERATIONS-45 # 45 is max history length
 
 # Flags
-DIFFUSE = True
+DIFFUSE = False
 DIFFUSION_RATE = 0.5  # 50% of signal diffuses out of the cell each time step
 
 # Visualizations
