@@ -1,10 +1,7 @@
 import numpy as np
-
-import constants
-from visualizations import convert_to_high_res
 import pandas as pd
 
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import src.constants as constants
 
 def targets(grid_size=constants.GRID_SIZE):
     

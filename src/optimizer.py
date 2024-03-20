@@ -5,8 +5,8 @@ import operator
 import random
 import pickle
 
-import constants
-from genome import Genome
+import src.constants as constants
+from src.individual import Individual
 
 class Optimizer:
 
@@ -108,9 +108,9 @@ class Optimizer:
         population = {}
         for i in range(pop_size):
             if self.NN_seed_weights is not None:
-                population[i] = Genome(self.next_id, init_grid=self.init_grid, init_signal=self.init_signal, weights=self.NN_seed_weights[i]) # seed initial population with a pretrained network
+                population[i] = Individual(self.next_id, init_grid=self.init_grid, init_signal=self.init_signal, weights=self.NN_seed_weights[i]) # seed initial population with a pretrained network
             else:
-                population[i] = Genome(self.next_id, init_grid=self.init_grid, init_signal=self.init_signal)
+                population[i] = Individual(self.next_id, init_grid=self.init_grid, init_signal=self.init_signal)
             self.next_id += 1
         return population
 
@@ -186,7 +186,7 @@ class Optimizer:
         return children
 
     def insert_random(self, children):
-        children.append(Genome(self.next_id, init_grid=self.init_grid, init_signal=self.init_signal))
+        children.append(Individual(self.next_id, init_grid=self.init_grid, init_signal=self.init_signal))
         self.next_id += 1
         return children
 

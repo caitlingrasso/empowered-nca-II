@@ -1,14 +1,5 @@
-'''
-Created on 2023-04-06 09:38:34
-@author: caitgrasso
-
-Descriptions: Additional functions to be interchanged with empowerment as the third objective.  
-'''
-
 import numpy as np
 from collections import Counter
-import statistics
-import matplotlib.pyplot as plt
 
 def shannon_entropy(series):
 

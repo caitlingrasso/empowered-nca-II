@@ -1,12 +1,9 @@
-from turtle import color
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from matplotlib.animation import FFMpegWriter
 
-import copy
-
-import constants
+import src.constants as constants
 
 def display_grid(grid, title='', show=True, colormap=constants.CMAP_CELLS, save=False, fn=''):
     fig, ax = plt.subplots()

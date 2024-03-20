@@ -7,7 +7,8 @@ from glob import glob
 import random
 import constants
 import pyinform
-import visualizations
+
+import src.visualizations as visualizations
 
 def save_movie_from_pickle(fn, iterations, save_filename=None, title='', target=None, title_color=None):
 

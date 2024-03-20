@@ -5,13 +5,11 @@ import matplotlib.pyplot as plt
 import pickle
 import pyinform
 
-from ca_model import CA_MODEL
-import constants
-from visualizations import display_body_signal
-from additional_objectives import min_action_entropy, max_action_entropy, min_global_action_entropy
-# from config import square_damage_coords
+from src.ca_model import CA_MODEL
+import src.constants as constants
+from src.objectives import min_action_entropy, max_action_entropy, min_global_action_entropy
 
-class Genome:
+class Individual:
 
     def __init__(self, id, weights=None, init_grid=None, init_signal=None):
         self.genome = CA_MODEL(weights=weights, init_grid=init_grid, init_signal=init_signal)
@@ -21,7 +19,7 @@ class Genome:
         # objective scores
         self.age = 0
         self.error = 0
-        self.error_phase1 = 0 # split into before and after damage
+        self.error_phase1 = 0 
         self.error_phase2 = 0
         self.MI = 0
         self.grad = 0

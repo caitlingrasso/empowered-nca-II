@@ -4,9 +4,8 @@ import copy
 import random
 import math
 
-import constants
-from util import to_function, tanh, sin, cos, abs, sigmoid, relu
-from visualizations import display_grid
+import src.constants as constants
+from src.util import to_function, tanh, sin, cos, abs, sigmoid, relu
 
 class CA_MODEL:
 
