@@ -30,7 +30,7 @@ def extract_mean_of_best_from_trials(inpath):
     for filename in filenames:
 
         run = filename.split('run')[-1].split('.')[0]
-
+    
         # if int(run) != 17 and int(run) !=29: # for exp3_upscale/error_MI_k1
     
         try:
@@ -38,9 +38,13 @@ def extract_mean_of_best_from_trials(inpath):
                 best, stats = pickle.load(f)
             
         except:
-            with open(filename, 'rb') as f:
-                stuff = pickle.load(f)
-                best = stuff[3]
+            try:
+                with open(filename, 'rb') as f:
+                    stuff = pickle.load(f)
+                    best = stuff[3]
+            except:
+                print('problem with pickle file.')
+                break
 
         # Plot for stability over extended iterations
         history = best.playback(iterations=ITERATIONS)
@@ -68,12 +72,11 @@ alpha = 0.05 # significance level
 ITERATIONS = 50
 constants.GRID_SIZE=25
 TARGET = targets(grid_size=25)['square']
+DIR = 'data/exp8_signaling_artifact_removed'
 
 # Load in and compute the loss of the controls 
-ctrl_dir = 'data/exp1_ksweep'
-
-bi_ctrl_loss_dict = extract_mean_of_best_from_trials(ctrl_dir+'/error/')
-tri_ctrl_loss_dict = extract_mean_of_best_from_trials(ctrl_dir+'/error_phase1_error_phase2/')
+bi_ctrl_loss_dict = extract_mean_of_best_from_trials(DIR+'/error/')
+tri_ctrl_loss_dict = extract_mean_of_best_from_trials(DIR+'/error_phase1_error_phase2/')
 
 labels = []
 x_ticks = []
@@ -112,7 +115,7 @@ for i,k in enumerate(K):
     # inpath = 'data/exp3_upscale/k{}/error_MI/'.format(k)
 
     # High res
-    inpath = f'data/exp1_ksweep/k{k}/error_MI/'
+    inpath = f'{DIR}/error_MI/k{k}/'
 
     loss_dict = extract_mean_of_best_from_trials(inpath)
     values = list(loss_dict.values())
@@ -156,7 +159,6 @@ ax.set_ylabel('Loss', fontsize=15)
 plt.yticks(fontsize=10)
 
 # plt.show()
-plt.savefig('results/exp1_ksweep/ksweep_ranksums_highres.png', dpi=500, bbox_inches='tight')
+plt.savefig('results/exp8_signaling_artifact_removed/ksweep_ranksums_highres.png', dpi=500, bbox_inches='tight')
 # plt.close()
-
-
+ 
