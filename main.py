@@ -7,13 +7,10 @@ import time
 import os
 import pickle
 
-from numpy.lib.function_base import disp
-from numpy.lib.npyio import save
-
-from config import targets, init
-import constants
-from optimizer import Optimizer
-from visualizations import display_body_signal, display_grid
+from src.targets import targets, init
+import src.constants as constants
+from src.optimizer import Optimizer
+from src.visualizations import display_body_signal, display_grid
 
 def parse_args(args):
     parser = argparse.ArgumentParser()
@@ -21,7 +18,7 @@ def parse_args(args):
     parser.add_argument('--gens', default=constants.GENERATIONS, type=int)
     parser.add_argument('--popsize', default=constants.POP_SIZE, type=int)
     parser.add_argument('--target', default='square')
-    parser.add_argument('--objective1', default='error')
+    parser.add_argument('--objective1', default='loss')
     parser.add_argument('--objective2', default=None)
     parser.add_argument('--checkpoint_every', default=500, type=int)
     parser.add_argument('--k', default=1, type=int)
@@ -54,19 +51,15 @@ if __name__=="__main__":
             label = args.objective1+'_'+args.objective2+'_k{}'.format(constants.HISTORY_LENGTH)
         else:
             label = args.objective1+'_'+args.objective2
-    
-    # Save info of every individual for AFPO rainbow waterfall plot for first run only
-    # if args.run==1: 
-    #     constants.SAVE_ALL=True
 
     # set target
     target_str = args.target
     targ=targets()[target_str]
 
-    if constants.SIGNALING_ARTIFACT:
-        SA = 'SA'
+    if constants.GROWTH_BIAS:
+        GB = 'GB'
     else:
-        SA = 'SA_removed'
+        GB = 'GB_removed'
 
     if constants.DIFFUSE:
         diffuse = 'diffusion'
@@ -85,20 +78,19 @@ if __name__=="__main__":
 
     # Filenames
     prefix = '{}_{}{}{}_{}gens_{}ps_{}i_k{}_N{}_{}_{}_run{}'.format(args.objective1, obj2, target_str,constants.GRID_SIZE, args.gens, args.popsize, \
-        constants.ITERATIONS, constants.HISTORY_LENGTH, constants.NEIGHBORHOOD, SA, diffuse, args.run)
+        constants.ITERATIONS, constants.HISTORY_LENGTH, constants.NEIGHBORHOOD, GB, diffuse, args.run)
+    
     save_filename = 'data/{}.p'.format(prefix)
-    save_all_dir = 'arwp/{}'.format(prefix)
     checkpoint_dir = 'checkpoints/{}'.format(prefix)
 
     # make directories for data
     os.makedirs('data/', exist_ok=True)
-    os.makedirs('arwp/', exist_ok=True)
     os.makedirs('checkpoints/', exist_ok=True)
 
     # START RUN
     optimizer = Optimizer(target=targ, objectives=objectives, gens=args.gens, pop_size=args.popsize, 
-                        checkpoint_every=args.checkpoint_every, save_all_dir=save_all_dir,
-                        checkpoint_dir=checkpoint_dir, run_nbr=args.run, init_grid=init())
+                        checkpoint_every=args.checkpoint_every, checkpoint_dir=checkpoint_dir, 
+                        run_nbr=args.run, init_grid=init())
 
     best, stats = optimizer.run() # stats = [fits_per_gen, empowerment_per_gen, pareto_front, pf_sizes_per_gen]
     

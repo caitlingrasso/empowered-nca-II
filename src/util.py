@@ -5,10 +5,11 @@ import pickle
 import operator
 from glob import glob
 import random
-import constants
 import pyinform
 
 import src.visualizations as visualizations
+import src.constants as constants
+
 
 def save_movie_from_pickle(fn, iterations, save_filename=None, title='', target=None, title_color=None):
 

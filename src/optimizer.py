@@ -10,7 +10,7 @@ from src.individual import Individual
 
 class Optimizer:
 
-    def __init__(self, target, objectives=['age', 'error'], pop_size=constants.POP_SIZE, gens=constants.GENERATIONS,
+    def __init__(self, target, objectives=['age', 'loss'], pop_size=constants.POP_SIZE, gens=constants.GENERATIONS,
                  save_all_dir=None, checkpoint=True, checkpoint_dir='', checkpoint_every=1, run_nbr=1, init_grid=None, init_signal=None,
                  path_to_imstack=None, NN_seed_weights=None):
 
@@ -121,7 +121,7 @@ class Optimizer:
         # record stats
         self.pf_sizes_per_gen[0] = len(self.find_pareto_front())
         best = self.find_best()
-        self.fits_per_gen[0] = best.get_objective('error')
+        self.fits_per_gen[0] = best.get_objective('loss')
         self.empowerment_per_gen[0] = best.get_objective('MI')
         # self.best_inds_per_gen.append(best)
         if self.triobjective:
@@ -144,7 +144,7 @@ class Optimizer:
         # record stats
         self.pf_sizes_per_gen[self.gen] = len(pf)
         best = self.find_best()
-        self.fits_per_gen[self.gen] = best.get_objective(objective='error')
+        self.fits_per_gen[self.gen] = best.get_objective(objective='loss')
         self.empowerment_per_gen[self.gen] = best.get_objective(objective='MI')
 
         # self.best_inds_per_gen.append(best)
@@ -201,7 +201,7 @@ class Optimizer:
         while p1 == p2:
             p2 = np.random.randint(self.target_size)
 
-        if self.population[p1].error < self.population[p2].error:
+        if self.population[p1].loss < self.population[p2].loss:
             return p1
         else:
             return p2
@@ -242,8 +242,8 @@ class Optimizer:
     def dominates(self, ind1, ind2):
         return self.population[ind1].dominates_other(self.population[ind2], self.objectives)
 
-    def find_best(self, objective='error'):
-        # Finds best individual based on error
+    def find_best(self, objective='loss'):
+        # Finds best individual based on loss
         sorted_pop = sorted(self.population.values(), key=operator.attrgetter(objective), reverse=False)
         return sorted_pop[0]
 
@@ -291,7 +291,7 @@ class Optimizer:
                 line = "{}\t{}\n".format(self.population[i].get_objective(self.objectives[0]),
                                          self.population[i].get_objective(self.objectives[1]))
                 f.write(line)
-        elif len(self.objectives) == 3 and "error" in self.objectives:
+        elif len(self.objectives) == 3 and "loss" in self.objectives:
             f.write("{}\t{}\t{}\n".format(self.objectives[0], self.objectives[1], self.objectives[2]))
             for i in self.population:
                 line = "{}\t{}\t{}\n".format(self.population[i].get_objective(self.objectives[0]),
@@ -299,10 +299,10 @@ class Optimizer:
                                             self.population[i].get_objective(self.objectives[2]))
                 f.write(line)
         else:
-            f.write("{}\t{}\t{}\t{}\n".format(self.objectives[0], "error", self.objectives[1], self.objectives[2]))
+            f.write("{}\t{}\t{}\t{}\n".format(self.objectives[0], "loss", self.objectives[1], self.objectives[2]))
             for i in self.population:
                 line = "{}\t{}\t{}\t{}\n".format(self.population[i].get_objective(self.objectives[0]),
-                                            self.population[i].error,
+                                            self.population[i].loss,
                                             self.population[i].get_objective(self.objectives[1]),
                                             self.population[i].get_objective(self.objectives[2]))
                 f.write(line)

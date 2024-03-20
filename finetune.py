@@ -16,12 +16,11 @@ import os
 import pickle
 from glob import glob
 
-from config import targets, init
-import constants
-from optimizer import Optimizer
-from visualizations import display_body_signal, display_grid
-from genome import Genome
-from ca_model import CA_MODEL
+from src.targets import targets, init
+import src.constants as constants
+from src.optimizer import Optimizer
+from src.visualizations import display_body_signal, display_grid
+from src.ca_model import CA_MODEL
 
 def parse_args(args):
     parser = argparse.ArgumentParser()

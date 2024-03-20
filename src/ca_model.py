@@ -222,7 +222,7 @@ class CA_MODEL:
             x[:,cell_signal_index] = self.rescale(x[:,cell_signal_index]).astype(int)
 
         # Convert the first 5 inputs to binary (cell states)
-        if constants.SIGNALING_ARTIFACT:
+        if constants.GROWTH_BIAS:
             x[:,0:cell_signal_index] = x[:,0:cell_signal_index] > 0
         else:
             x[:,0:cell_signal_index] = x[:,0:cell_signal_index] > 0.5 # was 0
@@ -247,8 +247,8 @@ class CA_MODEL:
     #     return np.tanh(x)
 
     def rescale(self, x, xmin=0, xmax=1, a=0, b=255):
-        if constants.SIGNALING_ARTIFACT:
-            xmin = -1 # signally artifact that arose from mistakenly assuming sigmoid output was in the range (-1,1)
+        if constants.GROWTH_BIAS:
+            xmin = -1 # signally artifact that arose from mistakenly having sigmoid output in the range (-1,1)
         else:
             xmin=0 # sigmoid activation function ranges from (0-1)
         xmax = 1
