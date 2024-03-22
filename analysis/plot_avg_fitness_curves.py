@@ -5,25 +5,27 @@ import matplotlib.pyplot as plt
 import sys,os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from genome import Genome
-from visualizations import save_movie
-import constants
+from src.individual import Individual
+from src.visualizations import save_movie
+import src.constants as constants
 
-SAVE_DIR = 'exp1'
-GENS = 10
+SAVE_DIR = 'exp9_SA_removed_local'
+GENS = 1000
 TITLE = ''
 
 DIR = 'data/'+SAVE_DIR
 
-txs = ['error', 'error_MI_k1']
-labels = ['bi-loss','tri-loss-empowerment (k=1)']
-color_tx_dict = {'error':'tab:blue','error_MI_k1':'tab:green'}
+txs = ['data/exp9_SA_removed_local/loss', 'data/exp9_SA_removed_local/loss_MI/k1', 'data/exp9_SA_removed_local/loss_MI/k45', 'data/exp9_SA_removed_local/loss_phase1_loss_phase2']
+labels = ['bi-loss','tri-loss-empowerment (k=1)', 'tri-loss-empowerment (k=45)', 'tri-loss']
+# color_tx_dict = {'loss':'tab:blue','loss_MI_k1':'tab:green'}
+colors = ['blue', 'orange', 'green', 'red']
 
 line_handles=[]
 
 for j,tx in enumerate(txs):
 
-    results_dir = '{}/{}/*.p'.format(DIR, tx)
+    # results_dir = '{}/{}/*.p'.format(DIR, tx)
+    results_dir=tx+'/*.p'
 
     filenames = glob(results_dir)
 
@@ -48,8 +50,8 @@ for j,tx in enumerate(txs):
     ci = 1.96 * (np.std(all_fits, axis=0)/np.sqrt(len(all_fits)))
 
     x = np.arange(len(avg_fits))
-    line, = plt.semilogy(avg_fits, color=color_tx_dict[tx], linewidth=4)
-    plt.fill_between(x, (avg_fits-ci), (avg_fits+ci), color=color_tx_dict[tx], alpha=.25)
+    line, = plt.semilogy(avg_fits, color=colors[j], linewidth=4)
+    plt.fill_between(x, (avg_fits-ci), (avg_fits+ci), color=colors[j], alpha=.25)
 
     line_handles.append(line)
 
@@ -63,4 +65,5 @@ plt.yticks(fontsize=15)
 
 os.makedirs('results/{}'.format(SAVE_DIR), exist_ok=True)
 
-plt.savefig('results/{}/avg_fitness_curves_CI_semilog.png'.format(SAVE_DIR), dpi=300, bbox_inches='tight')
+plt.show()
+# plt.savefig('results/{}/avg_fitness_curves_CI_semilog.png'.format(SAVE_DIR), dpi=300, bbox_inches='tight')
