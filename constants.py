@@ -24,7 +24,7 @@ HISTORY_LENGTH = 1
 SEQUENCE_LENGTH = ITERATIONS-45 # 45 is max history length
 
 # Flags
-DIFFUSE = False
+DIFFUSE = True
 DIFFUSION_RATE = 0.5  # 50% of signal diffuses out of the cell each time step
 
 # Visualizations
