@@ -97,10 +97,12 @@ class Optimizer:
 
         if self.triobjective:
             # stats = [self.fits_per_gen, self.obj1_score_per_gen, self.obj2_score_per_gen, pareto_front, self.pf_sizes_per_gen, self.best_inds_per_gen]
-            stats = [self.fits_per_gen, self.empowerment_per_gen, self.obj1_score_per_gen, self.obj2_score_per_gen, pareto_front, self.pf_sizes_per_gen]
+            # stats = [self.fits_per_gen, self.empowerment_per_gen, self.obj1_score_per_gen, self.obj2_score_per_gen, pareto_front, self.pf_sizes_per_gen]
+            stats = [self.fits_per_gen, self.empowerment_per_gen, self.obj1_score_per_gen, self.obj2_score_per_gen, self.pf_sizes_per_gen]
         else:
             # stats = [self.fits_per_gen, pareto_front, self.pf_sizes_per_gen, self.best_inds_per_gen]
-            stats = [self.fits_per_gen, self.empowerment_per_gen, pareto_front, self.pf_sizes_per_gen]
+            # stats = [self.fits_per_gen, self.empowerment_per_gen, pareto_front, self.pf_sizes_per_gen]
+            stats = [self.fits_per_gen, self.empowerment_per_gen, self.pf_sizes_per_gen]
 
         return best, stats
 

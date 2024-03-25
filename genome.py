@@ -47,7 +47,7 @@ class Genome:
         if 'min_action_entropy' in objectives:
             self.min_action_entropy = min_action_entropy(actions)
         elif 'max_action_entropy' in objectives:
-            self.min_prop_act = max_action_entropy(actions)
+            self.max_action_entropy = max_action_entropy(actions)
         elif 'min_global_action_entropy' in objectives:
             self.min_global_action_entropy = min_global_action_entropy(actions)
 
