@@ -12,6 +12,7 @@ import constants
 SAVE_DIR = 'exp8_signaling_artifact_removed'
 GENS = 2000
 TITLE = ''
+MEASURE = 'Loss' # 'Loss' or 'PF Size'
 
 DIR = 'data/'+SAVE_DIR
 
@@ -27,10 +28,7 @@ for j,tx in enumerate(txs):
 
     filenames = glob(results_dir)
 
-    if tx=='min_global_action_entropy':
-        all_fits = np.zeros(shape=(len(filenames), 1000+1))
-    else:
-        all_fits = np.zeros(shape=(len(filenames), GENS+1))
+    all_vals = np.zeros(shape=(len(filenames), GENS+1))
 
     for i,fn in enumerate(filenames):
 
@@ -38,25 +36,29 @@ for j,tx in enumerate(txs):
 
         with open(fn, 'rb') as f:
             best, stats = pickle.load(f)
-        fits_per_gen = stats[0]
 
+        if MEASURE == 'Loss':
+            vals_per_gen = stats[0]
+        elif MEASURE == 'PF Size':
+            vals_per_gen = stats[-1]
 
-        all_fits[i,:]=fits_per_gen
+        all_vals[i,:]=vals_per_gen
 
-    avg_fits = np.mean(all_fits, axis=0)
+    avg_vals = np.mean(all_vals, axis=0)
+
     # 95% confidence intervals
-    ci = 1.96 * (np.std(all_fits, axis=0)/np.sqrt(len(all_fits)))
+    ci = 1.96 * (np.std(all_vals, axis=0)/np.sqrt(len(all_vals)))
 
-    x = np.arange(len(avg_fits))
+    x = np.arange(len(avg_vals))
     # line, = plt.semilogy(avg_fits, color=color_tx_dict[tx], linewidth=4)
-    line, = plt.plot(avg_fits, color=color_tx_dict[tx], linewidth=4)
-    plt.fill_between(x, (avg_fits-ci), (avg_fits+ci), color=color_tx_dict[tx], alpha=.25)
+    line, = plt.plot(avg_vals, color=color_tx_dict[tx], linewidth=4)
+    plt.fill_between(x, (avg_vals-ci), (avg_vals+ci), color=color_tx_dict[tx], alpha=.25)
 
     line_handles.append(line)
 
 plt.legend(line_handles, labels, fontsize=15)
 plt.xlabel('Generations', fontsize=25)
-plt.ylabel('Loss', fontsize=25)
+plt.ylabel(MEASURE, fontsize=25)
 plt.title(TITLE, fontsize=25)
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
