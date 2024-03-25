@@ -9,15 +9,15 @@ from genome import Genome
 from visualizations import save_movie
 import constants
 
-SAVE_DIR = 'exp1'
-GENS = 10
+SAVE_DIR = 'exp8_signaling_artifact_removed'
+GENS = 2000
 TITLE = ''
 
 DIR = 'data/'+SAVE_DIR
 
-txs = ['error', 'error_MI_k1']
-labels = ['bi-loss','tri-loss-empowerment (k=1)']
-color_tx_dict = {'error':'tab:blue','error_MI_k1':'tab:green'}
+txs = ['error', 'error_phase1_error_phase2', 'error_MI/k1']
+labels = ['bi-loss','tri-loss', 'tri-loss-empowerment (k=1)']
+color_tx_dict = {'error':'tab:blue','error_phase1_error_phase2':'tab:orange','error_MI/k1':'tab:green'}
 
 line_handles=[]
 
@@ -48,7 +48,8 @@ for j,tx in enumerate(txs):
     ci = 1.96 * (np.std(all_fits, axis=0)/np.sqrt(len(all_fits)))
 
     x = np.arange(len(avg_fits))
-    line, = plt.semilogy(avg_fits, color=color_tx_dict[tx], linewidth=4)
+    # line, = plt.semilogy(avg_fits, color=color_tx_dict[tx], linewidth=4)
+    line, = plt.plot(avg_fits, color=color_tx_dict[tx], linewidth=4)
     plt.fill_between(x, (avg_fits-ci), (avg_fits+ci), color=color_tx_dict[tx], alpha=.25)
 
     line_handles.append(line)
@@ -61,6 +62,8 @@ plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 # plt.show()
 
-os.makedirs('results/{}'.format(SAVE_DIR), exist_ok=True)
 
-plt.savefig('results/{}/avg_fitness_curves_CI_semilog.png'.format(SAVE_DIR), dpi=300, bbox_inches='tight')
+plt.show()
+# os.makedirs('results/{}'.format(SAVE_DIR), exist_ok=True)
+
+# plt.savefig('results/{}/avg_fitness_curves_CI_semilog.png'.format(SAVE_DIR), dpi=300, bbox_inches='tight')
